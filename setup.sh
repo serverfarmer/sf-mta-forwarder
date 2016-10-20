@@ -34,4 +34,13 @@ elif [ "$OSTYPE" = "debian" ]; then
 
 	echo "setting up ssmtp"
 	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/etc/ssmtp/ssmtp.conf
+
+elif [ "$OSTYPE" = "freebsd" ]; then
+	install_pkg ssmtp
+
+	echo "setting up ssmtp"
+	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/usr/local/etc/ssmtp/ssmtp.conf
+
+	save_original_config /etc/mail/mailer.conf
+	install_link $common/freebsd-mailer.conf /etc/mail/mailer.conf
 fi
