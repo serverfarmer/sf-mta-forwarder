@@ -16,7 +16,9 @@ base=$common/$OSVER
 
 if [ -f $base/postfix.tpl ]; then
 
-	if [ "$OSTYPE" = "suse" ]; then
+	if [ "$OSTYPE" = "netbsd" ]; then
+		ln -sf /etc/mail/aliases /etc/aliases
+	elif [ "$OSTYPE" = "suse" ]; then
 		uninstall_rpm patterns-openSUSE-minimal_base-conflicts
 		install_suse postfix
 		install_suse mailx
@@ -34,7 +36,9 @@ if [ -f $base/postfix.tpl ]; then
 	cat $common/aliases-$OSTYPE.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g >/etc/aliases
 	newaliases
 
-	if [ "$OSTYPE" = "suse" ]; then
+	if [ "$OSTYPE" = "netbsd" ]; then
+		/etc/rc.d/postfix reload
+	elif [ "$OSTYPE" = "suse" ]; then
 		service postfix restart
 	else
 		service postfix reload
