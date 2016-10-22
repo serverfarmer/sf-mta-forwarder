@@ -15,8 +15,16 @@ common=/opt/farm/ext/mta-forwarder/templates
 base=$common/$OSVER
 
 if [ -f $base/postfix.tpl ]; then
-	install_rpm postfix
-	install_rpm mailx
+
+	if [ "$OSTYPE" = "suse" ]; then
+		uninstall_rpm patterns-openSUSE-minimal_base-conflicts
+		install_suse postfix
+		install_suse mailx
+	else
+		install_rpm postfix
+		install_rpm mailx
+	fi
+
 	save_original_config /etc/postfix/main.cf
 
 	echo "setting up postfix"
@@ -26,7 +34,11 @@ if [ -f $base/postfix.tpl ]; then
 	cat $common/aliases-$OSTYPE.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g >/etc/aliases
 	newaliases
 
-	service postfix reload
+	if [ "$OSTYPE" = "suse" ]; then
+		service postfix restart
+	else
+		service postfix reload
+	fi
 
 elif [ "$OSTYPE" = "debian" ]; then
 	install_deb ssmtp
