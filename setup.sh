@@ -58,6 +58,7 @@ elif [ "$OSTYPE" = "freebsd" ]; then
 	echo "setting up ssmtp"
 	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/usr/local/etc/ssmtp/ssmtp.conf
 
+	remove_link /etc/mail/mailer.conf
 	save_original_config /etc/mail/mailer.conf
-	install_link $common/freebsd-mailer.conf /etc/mail/mailer.conf
+	install_copy $common/freebsd-mailer.conf /etc/mail/mailer.conf
 fi
