@@ -19,8 +19,8 @@ if [ -f $base/postfix.tpl ]; then
 	if [ "$OSTYPE" = "netbsd" ]; then
 		ln -sf /etc/mail/aliases /etc/aliases
 	else
-		/opt/farm/ext/repos/utils/uninstall.sh patterns-openSUSE-minimal_base-conflicts
-		/opt/farm/ext/repos/utils/install.sh postfix mailx
+		/opt/farm/ext/packages/utils/uninstall.sh patterns-openSUSE-minimal_base-conflicts
+		/opt/farm/ext/packages/utils/install.sh postfix mailx
 	fi
 
 	save_original_config /etc/postfix/main.cf
@@ -42,13 +42,13 @@ if [ -f $base/postfix.tpl ]; then
 	fi
 
 elif [ "$OSTYPE" = "debian" ]; then
-	/opt/farm/ext/repos/utils/install.sh ssmtp bsd-mailx
+	/opt/farm/ext/packages/utils/install.sh ssmtp bsd-mailx
 
 	echo "setting up ssmtp"
 	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/etc/ssmtp/ssmtp.conf
 
 elif [ "$OSTYPE" = "freebsd" ]; then
-	/opt/farm/ext/repos/utils/install.sh ssmtp
+	/opt/farm/ext/packages/utils/install.sh ssmtp
 
 	echo "setting up ssmtp"
 	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/usr/local/etc/ssmtp/ssmtp.conf
