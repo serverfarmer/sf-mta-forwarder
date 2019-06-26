@@ -37,6 +37,9 @@ if [ -f $base/postfix.tpl ]; then
 		/etc/rc.d/postfix reload
 	elif [ "$OSTYPE" = "suse" ]; then
 		service postfix restart
+	elif [ "$OSVER" = "redhat-rhel8" ]; then
+		systemctl enable postfix
+		service postfix restart
 	else
 		service postfix reload
 	fi
