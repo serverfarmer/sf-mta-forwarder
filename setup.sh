@@ -44,6 +44,13 @@ if [ -f $base/postfix.tpl ]; then
 		service postfix reload
 	fi
 
+elif [ "$OSVER" = "debian-buster" ]; then
+	/opt/farm/ext/mta-forwarder/setup-lsb-invalid-mta.sh
+	/opt/farm/ext/packages/utils/install.sh bsd-mailx
+
+	echo "setting up ssmtp"
+	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/etc/ssmtp/ssmtp.conf
+
 elif [ "$OSTYPE" = "debian" ]; then
 	/opt/farm/ext/packages/utils/install.sh ssmtp bsd-mailx
 
