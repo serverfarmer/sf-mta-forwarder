@@ -26,6 +26,12 @@ if [ -f /etc/debian_version ]; then
 			cp /opt/farm/ext/mta-forwarder/templates/revaliases /etc/ssmtp
 		fi
 
+		echo "replacing sendmail with ssmtp wrapper script"
+		rm -f /usr/sbin/sendmail
+		echo "#!/bin/sh" >/usr/sbin/sendmail
+		echo "/usr/sbin/ssmtp $@" >>/usr/sbin/sendmail
+		chmod 0755 /usr/sbin/sendmail
+
 		if [ "`uname -m`" = "x86_64" ]; then
 			arch="amd64"
 		else
@@ -37,7 +43,10 @@ if [ -f /etc/debian_version ]; then
 
 		ln -sf /usr/sbin/ssmtp /usr/sbin/mailq
 		ln -sf /usr/sbin/ssmtp /usr/sbin/newaliases
-		ln -sf /usr/sbin/ssmtp /usr/sbin/sendmail
 		ln -sf /usr/sbin/sendmail /usr/lib/sendmail
+
+		if [ ! -s /etc/debsums-ignore ] || ! git -q /usr/sbin/sendmail /etc/debsums-ignore; then
+			echo "/usr/sbin/sendmail" >>/etc/debsums-ignore
+		fi
 	fi
 fi
