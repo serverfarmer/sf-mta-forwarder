@@ -45,7 +45,7 @@ if [ -f /etc/debian_version ]; then
 		ln -sf /usr/sbin/ssmtp /usr/sbin/newaliases
 		ln -sf /usr/sbin/sendmail /usr/lib/sendmail
 
-		if [ ! -s /etc/debsums-ignore ] || ! git -q /usr/sbin/sendmail /etc/debsums-ignore; then
+		if [ ! -s /etc/debsums-ignore ] || ! grep -q /usr/sbin/sendmail /etc/debsums-ignore; then
 			echo "/usr/sbin/sendmail" >>/etc/debsums-ignore
 		fi
 	fi
