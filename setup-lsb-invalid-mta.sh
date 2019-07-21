@@ -32,13 +32,8 @@ if [ -f /etc/debian_version ]; then
 		echo "/usr/sbin/ssmtp $@" >>/usr/sbin/sendmail
 		chmod 0755 /usr/sbin/sendmail
 
-		if [ "`uname -m`" = "x86_64" ]; then
-			arch="amd64"
-		else
-			arch="i386"
-		fi
-
 		echo "creating ssmtp symbolic links"
+		arch=`/opt/farm/ext/system/detect-architecture.sh`
 		ln -sf /opt/farm/ext/mta-forwarder/support/ssmtp_debian/ssmtp.$arch /usr/sbin/ssmtp
 
 		ln -sf /usr/sbin/ssmtp /usr/sbin/mailq
