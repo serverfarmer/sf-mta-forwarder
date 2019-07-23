@@ -29,7 +29,7 @@ if [ -f /etc/debian_version ]; then
 		echo "replacing sendmail with ssmtp wrapper script"
 		rm -f /usr/sbin/sendmail
 		echo "#!/bin/sh" >/usr/sbin/sendmail
-		echo "/usr/sbin/ssmtp $@" >>/usr/sbin/sendmail
+		echo "/usr/sbin/ssmtp \$@" >>/usr/sbin/sendmail
 		chmod 0755 /usr/sbin/sendmail
 
 		echo "creating ssmtp symbolic links"
