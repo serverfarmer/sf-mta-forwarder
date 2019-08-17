@@ -6,6 +6,7 @@
 if [ -f /etc/debian_version ]; then
 	/opt/farm/ext/packages/utils/install.sh libgnutls-openssl27
 	/opt/farm/ext/packages/utils/uninstall.sh postfix exim4 exim4-daemon-light exim4-base exim4-config
+	/opt/farm/scripts/setup/extension.sh sf-binary-ssmtp
 
 	echo "checking for debian package lsb-invalid-mta"
 	if [ "`dpkg -l lsb-invalid-mta 2>/dev/null |grep ^ii`" = "" ] \
@@ -14,7 +15,9 @@ if [ -f /etc/debian_version ]; then
 		dpkg -i /opt/farm/ext/mta-forwarder/support/packages/lsb-invalid-mta_4.1+Debian13+nmu1_all.deb
 	fi
 
-	if [ "`dpkg -l lsb-invalid-mta 2>/dev/null |grep ^ii`" != "" ]; then
+	SSMTP=`/opt/farm/ext/binary-ssmtp/wrapper/get-ssmtp-binary-name.sh`
+
+	if [ "$SSMTP" != "" ] && [ "`dpkg -l lsb-invalid-mta 2>/dev/null |grep ^ii`" != "" ]; then
 		echo "installing ssmtp in provided version on top of lsb-invalid-mta"
 		mkdir -p /etc/ssmtp
 
@@ -33,9 +36,7 @@ if [ -f /etc/debian_version ]; then
 		chmod 0755 /usr/sbin/sendmail
 
 		echo "creating ssmtp symbolic links"
-		arch=`/opt/farm/ext/system/detect-architecture.sh`
-		ln -sf /opt/farm/ext/mta-forwarder/support/ssmtp_debian/ssmtp.$arch /usr/sbin/ssmtp
-
+		ln -sf $SSMTP /usr/sbin/ssmtp
 		ln -sf /usr/sbin/ssmtp /usr/bin/mailq
 		ln -sf /usr/sbin/ssmtp /usr/bin/newaliases
 		ln -sf /usr/sbin/sendmail /usr/lib/sendmail
