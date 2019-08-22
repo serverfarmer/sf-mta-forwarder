@@ -37,12 +37,22 @@ if [ -f $base/postfix.tpl ]; then
 		/etc/rc.d/postfix reload
 	elif [ "$OSTYPE" = "suse" ]; then
 		service postfix restart
-	elif [ "$OSVER" = "redhat-rhel8" ]; then
-		systemctl enable postfix
-		service postfix restart
 	else
 		service postfix reload
 	fi
+
+elif [ "$OSVER" = "redhat-rhel8" ]; then
+	/opt/farm/ext/packages/utils/install.sh openssl-devel mailx
+
+	echo "checking for rpm package ssmtp"
+	if ! rpm --quiet -q ssmtp; then
+		echo "installing package ssmtp"
+		mach=`uname -m`
+		rpm -i /opt/farm/ext/mta-forwarder/support/packages/ssmtp-2.64-14.el8.$mach.rpm
+	fi
+
+	echo "setting up ssmtp"
+	cat $common/ssmtp.tpl |sed -e s/%%host%%/$HOST/g -e s/%%domain%%/$DOMAIN/g -e s/%%smtp%%/$SMTP/g >/etc/ssmtp/ssmtp.conf
 
 elif [ "$OSVER" = "debian-buster" ]; then
 	/opt/farm/ext/mta-forwarder/setup-lsb-invalid-mta.sh
