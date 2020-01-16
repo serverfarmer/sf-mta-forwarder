@@ -42,6 +42,11 @@ if [ -f $base/postfix.tpl ]; then
 		service postfix reload
 	fi
 
+elif [ "$OSTYPE" = "amazon" ]; then
+	/opt/farm/ext/packages/utils/install.sh openssl-devel mailx
+	/opt/farm/ext/packages/special/install-rpm-from-file.sh ssmtp /opt/farm/ext/mta-forwarder/support/packages/ssmtp-2.64-14.amzn1.$mach.rpm
+	/opt/farm/ext/mta-forwarder/configure-ssmtp.sh /etc/ssmtp
+
 elif [ "$OSVER" = "redhat-rhel7" ] || [ "$OSVER" = "redhat-centos7" ] || [ "$OSVER" = "redhat-oracle7" ]; then
 	/opt/farm/ext/packages/utils/install.sh openssl-devel mailx
 	/opt/farm/ext/packages/special/install-rpm-from-file.sh ssmtp /opt/farm/ext/mta-forwarder/support/packages/ssmtp-2.64-14.el7.$mach.rpm
