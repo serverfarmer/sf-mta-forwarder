@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 . /opt/farm/scripts/init
-. /opt/farm/scripts/functions.custom
 . /opt/farm/scripts/functions.install
 
 
@@ -9,7 +8,7 @@ if [ "$SMTP" = "true" ]; then
 	exit 0
 fi
 
-DOMAIN=`external_domain`
+DOMAIN=`/opt/farm/config/get-external-domain.sh`
 mach=`uname -m`
 
 common=/opt/farm/ext/mta-forwarder/templates

@@ -1,8 +1,7 @@
 #!/bin/sh
 . /opt/farm/scripts/init
-. /opt/farm/scripts/functions.custom
 
-DOMAIN=`external_domain`
+DOMAIN=`/opt/farm/config/get-external-domain.sh`
 path=$1
 
 if [ "$path" != "" ] && [ -d $path ]; then
